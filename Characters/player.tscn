@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://f32xwg4wg6a7"]
+[gd_scene load_steps=45 format=3 uid="uid://f32xwg4wg6a7"]
 
 [ext_resource type="Texture2D" uid="uid://dikrekl2a5j7h" path="res://Legacy-Fantasy - High Forest 2.3/Character/Attack-01/Attack-01-Sheet.png" id="1_4m0gv"]
 [ext_resource type="Texture2D" uid="uid://dg4blqfli1vdc" path="res://Legacy-Fantasy - High Forest 2.3/Character/Idle/Idle-Sheet.png" id="1_5mj4t"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://w3y7cpimr8x0" path="res://Legacy-Fantasy - High Forest 2.3/Character/Jumlp-All/Jump-All-Sheet.png" id="2_l48on"]
 [ext_resource type="Texture2D" uid="uid://dpxearl3df3ju" path="res://Legacy-Fantasy - High Forest 2.3/Character/Jump-End/Jump-End-Sheet.png" id="3_4m0gv"]
 [ext_resource type="Texture2D" uid="uid://cv3albynpvr6j" path="res://Legacy-Fantasy - High Forest 2.3/Character/Jump-Start/Jump-Start-Sheet.png" id="4_p728j"]
+[ext_resource type="Texture2D" uid="uid://b24r0sshf7t8q" path="res://Legacy-Fantasy - High Forest 2.3/Background/Background.png" id="7_p728j"]
 
 [sub_resource type="GDScript" id="GDScript_5mj4t"]
 script/source = "extends CharacterBody2D
@@ -106,9 +107,6 @@ func play_animation():
 		States.DASHING:
 			animated_sprite.play(\"dash\")
 "
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ywxx0"]
-height = 44.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4m0gv"]
 particles_animation = true
@@ -385,16 +383,31 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ywxx0"]
+height = 44.0
+
 [node name="Player" type="CharacterBody2D"]
 script = SubResource("GDScript_5mj4t")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_4m0gv")
+sprite_frames = SubResource("SpriteFrames_mevwr")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.446422
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_ywxx0")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-material = SubResource("CanvasItemMaterial_4m0gv")
-sprite_frames = SubResource("SpriteFrames_mevwr")
-animation = &"dash"
-autoplay = "idle"
-frame_progress = 0.484175
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(864, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(0, -50)
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("7_p728j")
+centered = false
