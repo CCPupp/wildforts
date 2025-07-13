@@ -7,6 +7,7 @@ class_name State
 
 var character : CharacterBody2D
 var next_state : State
+var playback : AnimationNodeStateMachinePlayback
 
 func state_process(delta):
 	var direction := Input.get_vector("left", "right", "ui_up", "ui_down")

@@ -4,6 +4,7 @@ class_name StateMachine
 
 @export var character : CharacterBody2D
 @export var current_state : State
+@export var animation_tree : AnimationTree
 
 var states : Array[State]
 
@@ -11,6 +12,7 @@ func _ready():
 	for child in get_children():
 		if child is State:
 			child.character = character
+			child.playback = animation_tree["parameters/playback"]
 			states.append(child)
 		else:
 			push_warning("Child " 

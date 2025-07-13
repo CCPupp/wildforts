@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://f32xwg4wg6a7"]
+[gd_scene load_steps=25 format=3 uid="uid://f32xwg4wg6a7"]
 
 [ext_resource type="Texture2D" uid="uid://dg4blqfli1vdc" path="res://Legacy-Fantasy - High Forest 2.3/Character/Idle/Idle-Sheet.png" id="1_5mj4t"]
 [ext_resource type="Texture2D" uid="uid://b2lebkul2uu4b" path="res://Legacy-Fantasy - High Forest 2.3/Character/Run/Run-Sheet.png" id="2_eovys"]
@@ -148,12 +148,58 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
+[sub_resource type="Animation" id="Animation_w3rah"]
+resource_name = "dash"
+length = 0.2
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_eovys")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0001, 0.0002, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [6, 1, 5, 6]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w3rah"]
 _data = {
 &"RESET": SubResource("Animation_5slg2"),
+&"dash": SubResource("Animation_w3rah"),
 &"idle": SubResource("Animation_p728j"),
 &"run": SubResource("Animation_cbmiu")
 }
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_w3rah"]
+animation = &"dash"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_p728j"]
 animation = &"idle"
@@ -176,10 +222,16 @@ blend_mode = 1
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_p728j"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c4gpq"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5slg2"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_c4gpq"]
+states/Dash/node = SubResource("AnimationNodeAnimation_w3rah")
+states/Dash/position = Vector2(332, 209)
 states/Move/node = SubResource("AnimationNodeBlendSpace1D_w3rah")
-states/Move/position = Vector2(356, 101)
-transitions = ["Start", "Move", SubResource("AnimationNodeStateMachineTransition_p728j")]
+states/Move/position = Vector2(332, 100)
+transitions = ["Start", "Move", SubResource("AnimationNodeStateMachineTransition_p728j"), "Move", "Dash", SubResource("AnimationNodeStateMachineTransition_c4gpq"), "Dash", "Move", SubResource("AnimationNodeStateMachineTransition_5slg2")]
 
 [node name="Player" type="CharacterBody2D"]
 script = SubResource("GDScript_5mj4t")
@@ -210,12 +262,13 @@ libraries = {
 [node name="AnimationTree" type="AnimationTree" parent="."]
 tree_root = SubResource("AnimationNodeStateMachine_c4gpq")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Move/blend_position = 0.242951
+parameters/Move/blend_position = 0.183823
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("character", "current_state")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("character", "current_state", "animation_tree")]
 script = ExtResource("8_c4gpq")
 character = NodePath("..")
 current_state = NodePath("Ground")
+animation_tree = NodePath("../AnimationTree")
 
 [node name="Ground" type="Node" parent="StateMachine" node_paths=PackedStringArray("air_state", "dashing_state")]
 script = ExtResource("9_c4gpq")
